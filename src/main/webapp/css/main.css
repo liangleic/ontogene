@@ -1,0 +1,422 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    margin: 0px;
+    padding: 0px;
+    background-color: rgb(255, 255, 245);
+    /*font: 80% Verdana, Geneva, Tahoma, sans-serif;*/
+    font: 100%/1.6 verdana, arial, helvetica, sans-serif;
+}
+
+div.top {
+    width: 100%;
+    margin: 0;
+    height: 120px;
+    background-color: #FFFFFF;
+    /*008BA5; background: -webkit-linear-gradient(top);*/
+    min-width: 1000px;
+}
+
+div.mid {
+    margin: 0;
+    width: 100%;
+}
+
+div.content {
+    width: 98%;
+    margin: 0 auto;
+    background-color: rgb(255, 255, 245);
+    font-size: 90%;
+    padding: 10px;
+}
+
+div.bottom {
+    width: 100%;
+    overflow: hidden;
+
+}
+
+div.bottom .footer {
+    width: 100%;
+    background: #e9effa;
+    border-width: 2px 0 2px 0;
+    border-color: #008BA5;
+    border-style: solid;
+    margin: 0px auto;
+    overflow: hidden;
+}
+
+div.bottom .left {
+    float: left;
+    font-size: 70%;
+}
+
+div.bottom p {
+    margin: 5px 10px;
+    font-size: 70%;
+    text-align: right;
+    line-height: 1.5;
+}
+
+.out {
+    width: 100%;
+}
+
+/*Block*/
+div.block {
+    border: 1px solid #15B15A;
+    padding: 0 20px;
+    background-color: white;
+}
+
+div.block h2 {
+    border-bottom: 1px solid #15B15A;
+    background: #E1F5E2;
+    color: #000;
+    margin: 0 -20px 5px;
+    padding: 5px 10px;
+}
+
+div.block h3 {
+    padding: 5px 10px;
+    color: #006;
+    margin: 10px -20px;
+    border-top: 1px solid #15B15A;
+    padding: 5px 10px;
+}
+
+div.block fieldset {
+    display: inline;
+    padding: 5px 5px;
+}
+
+.blockContent {
+    margin: 20px 0;
+}
+
+.blockLine {
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+div.treeView {
+    margin-top: 10px;
+    overflow-x: auto;
+    min-height: 500px;
+}
+
+div.block input.textBox {
+    width: 150px;
+    height: 20px;
+}
+
+div.block label {
+    font-size: 15px;
+}
+
+div.block input.submitButton {
+    width: 50px;
+    height: 20px;
+    margin-left: 10px;
+    font-size: 14px;;
+}
+
+div.block table {
+    width: 100%;
+    font-size: 15px;
+}
+
+div.block table tr {
+    height: 30px;
+}
+
+p {
+    margin: 10px 0;
+}
+
+.button {
+    cursor: pointer;
+}
+
+textarea, .txt, .textBox, .button {
+    border: 1px solid #000;
+}
+
+div.block .paraLine {
+    width: 100%;
+}
+
+div.block .paraLine .para {
+    width: 200px;
+}
+
+.chart div {
+    margin: 0;
+    padding: 0;
+}
+
+.resultTable {
+    background: rgb(211, 240, 202);
+    width: 100%;
+}
+
+.resultTable tr {
+
+}
+
+.even_row {
+    background: #fff;
+}
+
+.resultTable th {
+    padding: 0 2px;
+    font-size: 80%;
+    font-weight: bold;
+    text-align: left;
+}
+
+.resultTable .long {
+    word-break: break-all;
+    vertical-align: top;
+    padding: 2px;
+}
+
+.resultTable td {
+    vertical-align: top;
+    padding: 2px;
+}
+
+.resultTable td ul {
+    list-style: none;
+    float: right;
+    text-align: right;
+    vertical-align: top;
+    padding: 2px;
+}
+/*
+div.content a:link {
+	padding: 0 2px;
+	text-decoration: none;
+	color: #006;
+	border-bottom: 1px dotted #99F;
+	cursor: hand;
+}
+div.content a:visited {
+	border-bottom: 1px dotted #99F;
+}
+div.content a:hover  {
+	cursor: hand;
+	border-bottom: 1px dotted #99F;
+	background-color:rgb(44, 165, 131);
+	color: white;
+}
+*/
+.assoc-link {
+    font-size: 75%;
+    margin-left: 5px;
+    font-weight: normal;
+    border-bottom: 1px dotted #99F;
+}
+
+p {
+    text-align: justify;
+}
+
+p.def {
+    width: 820px;
+    float: left;
+    display: none;
+}
+
+.resultTable tr.color0 {
+
+}
+
+.resultTable tr.color1 {
+
+}
+
+input.textBox {
+    font: 100% arial, sans-serif;
+}
+
+h1 {
+    text-align: center;
+    padding: 10px;
+}
+
+h1, h2 {
+    font-family: "trebuchet ms", "lucida grande", arial, sans-serif;
+}
+
+h2 a {
+    padding: 0 2px;
+    text-decoration: none;
+    color: #000;
+    border-bottom: 1px dotted #99F;
+}
+
+h2 a:link {
+    padding: 0 2px;
+    text-decoration: none;
+    color: #006;
+    border-bottom: 1px dotted #99F;
+    cursor: hand;
+}
+
+h2 a:visited {
+    border-bottom: 1px dotted #99F;
+}
+
+h2 a:hover {
+    cursor: hand;
+    border-bottom: 1px dotted #99F;
+    background-color: #008BA5;
+    color: white;
+    opacity: 0.8;
+    filter: alpha(opacity = 80);
+}
+
+.clear {
+    clear: both;
+}
+
+img.help {
+    width: 16px;
+    margin-left: 15px;
+    cursor: pointer;
+}
+
+.header {
+    height: 90px;
+    background: url("../images/header.png") repeat-x;
+}
+
+.header .logo1 {
+    float: left;
+    margin-left: 120px;
+    margin-top: 3px;
+}
+
+.header .logo2 {
+    float: right;
+    margin-right: 120px;
+    margin-top: 3px;
+}
+
+ul, li {
+    list-style-type: none;
+}
+
+.clear {
+    clear: both;
+    *display: inline; /*IE only*/
+}
+
+/*menu*/
+#nav {
+    margin: 0 auto;
+    margin-bottom:5px;
+    height: 30px;
+    list-style: none;
+    position: relative;
+    padding: 0px;
+    font-size: 16px;
+}
+
+#nav .jquery_inner {
+    margin-left: 16px;
+}
+
+#nav .jquery {
+    margin-right: 1px;
+    padding: 0 2em;
+}
+
+#nav .mainlevel {
+    float: left;
+    width: 12%;
+    cursor: pointer;
+}
+
+#nav .mainlevel a {
+    color: #FFF;
+    text-decoration: none;
+    line-height: 30px;
+    display: block;
+    text-align: center;
+    width: 100%;
+}
+
+#nav .mainlevel a:hover {
+    text-decoration: none;
+    background: rgb(76,150,223);
+}
+
+#navli1 {
+    text-decoration: none;
+    background: rgb(76,150,223);
+}
+
+#nav .mainlevel ul {
+    display: none;
+    position: absolute;
+}
+
+#nav .mainlevel ul a {
+    color: #FFF;
+    text-decoration: none;
+    line-height: 30px;
+    display: block;
+    text-align: center;
+    width: 100%;
+}
+
+#nav .mainlevel ul a:hover {
+    text-decoration: none;
+}
+
+#nav .mainlevel li {
+    border-top: 1px solid;
+    width: 174px; /*IE6 only*/
+}
+
+.log {
+    text-align: center;
+    line-height: 24px;
+    text-transform: capitalize;
+    margin: 50px auto;
+}
+
+table.dataintable {
+    margin-top: 15px;
+    border-collapse: collapse;
+    border: 1px solid #aaa;
+    width: 60%;
+    align: left;
+    margin: 0 auto;
+}
+
+table.dataintable th {
+    vertical-align: baseline;
+    padding: 6px 15px 6px 6px;
+    border: 1px solid #C0C0C0;
+    text-align: left;
+}
+
+table.dataintable td {
+    vertical-align: text-top;
+    padding: 6px 15px 6px 6px;
+    border: 1px solid #C0C0C0;
+}
+
+table.dataintable tr:nth-child(odd) {
+    background-color: #E0E0E0;
+}
+
+table.dataintable tr:nth-child(even) {
+    background-color: #fff;
+}

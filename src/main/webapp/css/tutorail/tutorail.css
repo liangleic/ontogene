@@ -1,0 +1,113 @@
+ul, li {
+    list-style-type: none;
+}
+
+.clear {
+    clear: both;
+    *display: inline; /*IE only*/
+}
+
+/*menu*/
+#nav {
+    margin: 0 auto;
+    margin-bottom:5px;
+    height: 30px;
+    list-style: none;
+    position: relative;
+    padding: 0px;
+    font-size: 16px;
+}
+
+#nav .jquery_inner {
+    margin-left: 16px;
+}
+
+#nav .jquery {
+    margin-right: 1px;
+    padding: 0 2em;
+}
+
+#nav .mainlevel {
+    float: left;
+    width: 12%;
+    cursor: pointer;
+}
+
+#nav .mainlevel a {
+    color: #FFF;
+    text-decoration: none;
+    line-height: 30px;
+    display: block;
+    text-align: center;
+    width: 100%;
+}
+
+#nav .mainlevel a:hover {
+    text-decoration: none;
+    background: rgb(76,150,223);
+}
+
+#navli8 {
+    text-decoration: none;
+    background: rgb(76,150,223);
+}
+
+#nav .mainlevel ul {
+    display: none;
+    position: absolute;
+}
+
+#nav .mainlevel ul a {
+    color: #FFF;
+    text-decoration: none;
+    line-height: 30px;
+    display: block;
+    text-align: center;
+    width: 100%;
+}
+
+#nav .mainlevel ul a:hover {
+    text-decoration: none;
+}
+
+#nav .mainlevel li {
+    border-top: 1px solid;
+    width: 174px; /*IE6 only*/
+}
+
+.log {
+    text-align: center;
+    line-height: 24px;
+    text-transform: capitalize;
+    margin: 50px auto;
+}
+
+table.dataintable {
+    margin-top: 15px;
+    border-collapse: collapse;
+    border: 1px solid #aaa;
+    width: 60%;
+    align: left;
+    margin: 0 auto;
+}
+
+table.dataintable th {
+    vertical-align: baseline;
+    padding: 6px 15px 6px 6px;
+    border: 1px solid #E0E0E0;
+    text-align: left;
+}
+
+table.dataintable td {
+    vertical-align: text-top;
+    padding: 6px 15px 6px 6px;
+    border: 1px solid #E0E0E0;
+}
+
+table.dataintable tr:nth-child(odd) {
+    background-color: #E0E0E0;
+}
+
+table.dataintable tr:nth-child(even) {
+    background-color: #fff;
+}
