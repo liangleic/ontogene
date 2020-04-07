@@ -214,7 +214,7 @@ public class AnnotationController {
         Map<String, List> mapda = new HashMap<>();
         List<Map<String, String>> listnode = new ArrayList<>();
         HashMap<String, Map<String, String>> Mapnode = new HashMap<>();
-        HashSet<String> Mapset = new HashSet<String>();
+        HashSet<String> mapset = new HashSet<String>();
 
         List<Map<String, String>> listedge = new ArrayList<>();
         HashMap<String, Map<String, String>> Mapedge = new HashMap<String, Map<String, String>>();
@@ -239,17 +239,8 @@ public class AnnotationController {
         for (Annotation a : annotationList) {
             node1List1.add(a.getRna_hgnc_id());
         }
-
-//        while (rs.next()) {
-//            node1List1.add(rs.getString("rna_hgnc_id"));
-//            System.out.println("rs.getString rna_hgnc_id:" + rs.getString("rna_hgnc_id"));
-//        }
         /************ first gene **************/
 
-        System.out.println("node1List1:" + node1List1);
-        for (String l : node1List1) {
-            System.out.println("nnnnnn:" + l);
-        }
 
         /************ second gene **************/
         if (!noid[1].equals(noid[0])) {
@@ -317,7 +308,7 @@ public class AnnotationController {
                     mapedge.put("source", rna.getRna2_hgnc_id());
                     mapedge.put("edgecolor", "inter");
 
-                    if (!Mapset.contains(rna.getRna1_hgnc_id())) {
+                    if (!mapset.contains(rna.getRna1_hgnc_id())) {
                         Map<String, String> mapchild = new HashMap<>();
                         mapchild.put("id", rna.getRna1_hgnc_id());
                         mapchild.put("label", rna.getRna1_symbol());
@@ -325,9 +316,9 @@ public class AnnotationController {
                         mapchild.put("nodesize", "child");
 
                         listnode.add(mapchild);
-                        Mapset.add(rna.getRna1_hgnc_id());
+                        mapset.add(rna.getRna1_hgnc_id());
                     }
-                    if (!Mapset.contains(rna.getRna2_hgnc_id())) {
+                    if (!mapset.contains(rna.getRna2_hgnc_id())) {
                         Map<String, String> mapchild = new HashMap<>();
                         mapchild.put("id", rna.getRna2_hgnc_id());
                         mapchild.put("label", rna.getRna2_symbol());
@@ -335,7 +326,7 @@ public class AnnotationController {
                         mapchild.put("nodesize", "child");
 
                         listnode.add(mapchild);
-                        Mapset.add(rna.getRna2_hgnc_id());
+                        mapset.add(rna.getRna2_hgnc_id());
                     }
 
                     if (!listedge.contains(mapedge))
