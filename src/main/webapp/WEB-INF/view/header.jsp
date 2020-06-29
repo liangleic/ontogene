@@ -48,8 +48,8 @@
                 <img alt="" src="<%=request.getContextPath()%>/images/head.jpg" height="60" width="300">
 
             </td>
-            <td width="10%"></td>
-            <td width="50%" valign="bottom">
+            <td width="3%"></td>
+            <td width="90%" valign="bottom">
                 <ul id="nav">
 
                     <li class="mainlevel" id="navli1"> <a href="<%= request.getContextPath() %>/">Home</a></li>
@@ -59,15 +59,15 @@
                     <li class="mainlevel" id="navli5"><a href="<%= request.getContextPath() %>/service">Service</a></li>
                     <li class="mainlevel" id="navli6"><a href="<%= request.getContextPath() %>/resource">Resource</a></li>
                     <li class="mainlevel" id="navli7"><a href="<%= request.getContextPath() %>/submit">Submit</a></li>
-                    <li class="mainlevel" id="navli8"><a href="<%= request.getContextPath() %>/tutorial">Tutorial</a></li><!--
-	<li class="mainlevel" id="navli9"><a href="Contact us.jsp">Contact</a>	</li> -->
+                    <li class="mainlevel" id="navli8"><a href="<%= request.getContextPath() %>/tutorial">Tutorial</a></li>
+                    <li class="mainlevel" id="navli9"><a href="<%= request.getContextPath() %>/randomwalk">GPrediction</a></li>
 
                 </ul>
             </td>
 
-            <td width="10%"></td>
-            <td width="15%" align="center" valign="middle">
-                <img alt="" src="<%=request.getContextPath()%>/images/logo.png" height="60" width="300" align="right" title="Ontogene v2.0">
+            <td width="3%"></td>
+            <td width="5%" align="center" valign="middle">
+                <img alt="" src="<%=request.getContextPath()%>/images/logo.png" height="60" width="250" align="right" title="Ontogene v2.0">
             </td></tr>
     </table>
 

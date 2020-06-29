@@ -1,4 +1,5 @@
 
+
 spring:
   datasource:
     username: root
@@ -41,3 +42,7 @@ mybatis:
   configuration:
     log-impl:
       org.apache.ibatis.logging.stdout.StdOutImpl
+server:
+  port: 90
+  servlet:
+    context-path: /Ontogene

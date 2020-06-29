@@ -52,6 +52,9 @@ public class MainController {
         return "submit/submit";
     }
 
+    @GetMapping("/randomwalk")
+    public String goRandomwalk(){return "randomwalk/randomwalk";}
+
     /**
      * 这个方法只用来做测试，随时可以删除
      * @return

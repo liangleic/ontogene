@@ -26,56 +26,10 @@ function add_term() {
         term_names[i] = $($(this).children("input").get(0)).val();
         search_genes[i] = $(this).children("input").attr("id");
         console.log("111:" + term_names[i]);
-
         i++;
     });
     console.log(JSON.stringify("term_namessssss:" + term_names));
     console.log(JSON.stringify("search_genessss:" + search_genes));
-    // 插件根据用户输入值进行搜索和过滤，让用户快速找到并从预设值列表中选择。
-    // 此方法会在input框中输入字符执行
-    // for (var i = 0; i < search_genes.length; i++) {
-    //     console.log("autocomplete执行了-----" + i);
-    //     $("#" + search_genes[i]).autocomplete({
-    //         source: function (request, response) {
-    //             console.log("request.term:" + request);
-    //             $.ajax({
-    //                 url: projectName + "/getTermList",
-    //                 //method : "get",
-    //                 dataType: "json",
-    //                 data: {term_name: request.term},
-    //                 success: function (data) {
-    //                     var data1 = eval(data);
-    //                     var list_map = new Array();
-    //                     for (var i in data1) {
-    //                         list_map.push({
-    //                                 lable: data1[i].id, value: data1[i].name,
-    //                                 description: data1[i].description
-    //                             }
-    //                         );
-    //                     }
-    //                     response(list_map);
-    //                 }
-    //             });
-    //         },
-    //
-    //         // autoFocus: true,
-    //         minLength: 3,
-    //         delay: 500,
-    //         focus: function (event, ui) {
-    //             $("#" + search_genes[i]).val(ui.item.value);
-    //             return false;
-    //         },
-    //         select: function (event, ui) {
-    //             //alert(ui.item.value);
-    //             $("#" + search_genes[i]).val(ui.item.value);
-    //             term_id1 = ui.item.lable;
-    //
-    //             return false;
-    //         }
-    //     });
-    // }
-
-
 }
 
 
@@ -86,6 +40,17 @@ function sub_term(obj) {
     var length = $(obj).parent().parent().children().length;
     if (length > 2) {
         $(obj).parent().remove();
+        var i = 0;
+        // 删除的时候执行一下可以即时的更新term_names和search_genes，要不然会产生窗口已经删除了，但是删除的框对应的文本还在term_name和search_genes中
+        term_names = new Array();
+        search_genes = new Array();
+        var div_items = $("#term_div_parent").children().each(function () {
+            // console.log($(this).children().attr("id"));
+            term_names[i] = $($(this).children("input").get(0)).val();
+            search_genes[i] = $(this).children("input").attr("id");
+            console.log("111:" + term_names[i]);
+            i++;
+        });
     } else {
         alert("term个数不少于2个！");
     }
@@ -113,135 +78,6 @@ $(function () {
     var term_id2;
     var pathName = window.document.location.pathname;
     var projectName = pathName.substring(0, pathName.substr(1).indexOf('/') + 1);
-
-    // 插件根据用户输入值进行搜索和过滤，让用户快速找到并从预设值列表中选择。
-    // 此方法会在input框中输入字符执行
-
-    // $("#search1_gene").autocomplete({
-    //     source: function (request, response) {
-    //         console.log("request.term:" + request);
-    //         $.ajax({
-    //             url: projectName + "/getTermList",
-    //             //method : "get",
-    //             dataType: "json",
-    //             data: {term_name: request.term},
-    //             success: function (data) {
-    //                 var data1 = eval(data);
-    //                 var list_map = new Array();
-    //                 for (var i in data1) {
-    //                     list_map.push({
-    //                             lable: data1[i].id, value: data1[i].name,
-    //                             description: data1[i].description
-    //                         }
-    //                     );
-    //                 }
-    //                 response(list_map);
-    //             }
-    //         });
-    //     },
-    //
-    //     // autoFocus: true,
-    //     minLength: 3,
-    //     delay: 500,
-    //     focus: function (event, ui) {
-    //         $("#search1_gene").val(ui.item.value);
-    //         return false;
-    //     },
-    //     select: function (event, ui) {
-    //         //alert(ui.item.value);
-    //         $("#search1_gene").val(ui.item.value);
-    //         term_id1 = ui.item.lable;
-    //
-    //         return false;
-    //     }
-    // });
-
-
-    console.log("term_names:" + term_names);
-    // var i = 0;
-    // for (i = 0;i<term_names.length;i++){
-    //     $("#"+term_names[i]).autocomplete({
-    //         source: function (request, response) {
-    //             console.log("request.term:"+request);
-    //             $.ajax({
-    //                 url: projectName + "/getTermList",
-    //                 //method : "get",
-    //                 dataType: "json",
-    //                 data: {term_name: request.term},
-    //                 success: function (data) {
-    //                     var data1 = eval(data);
-    //                     var list_map = new Array();
-    //                     for (var i in data1) {
-    //                         list_map.push({
-    //                                 lable: data1[i].id, value: data1[i].name,
-    //                                 description: data1[i].description
-    //                             }
-    //                         );
-    //                     }
-    //                     response(list_map);
-    //                 }
-    //             });
-    //         },
-    //
-    //         //autoFocus : true,
-    //         minLength: 3,
-    //         delay: 500,
-    //         focus: function (event, ui) {
-    //             $(term_names[i]).val(ui.item.value);
-    //             return false;
-    //         },
-    //         select: function (event, ui) {
-    //             //alert(ui.item.value);
-    //             $(term_names[i]).val(ui.item.value);
-    //             term_id1 = ui.item.lable;
-    //
-    //             return false;
-    //         }
-    //     });
-    //
-    // }
-    //
-    //
-    // $("#search2_gene").autocomplete({
-    //
-    //     source: function (request, response) {
-    //         $.ajax({
-    //             url: projectName + "/getTermList",
-    //             //method : "get",
-    //             dataType: "json",
-    //             data: {term_name: request.term},
-    //             success: function (data) {
-    //
-    //                 var data1 = eval(data);
-    //                 var list_map = new Array();
-    //                 for (var i in data1) {
-    //                     list_map.push({
-    //                             lable: data1[i].id, value: data1[i].name,
-    //                             description: data1[i].description
-    //                         }
-    //                     );
-    //                 }
-    //                 response(list_map);
-    //             }
-    //         });
-    //     },
-    //     //autoFocus : true,
-    //     minLength: 3,
-    //     delay: 500,
-    //     focus: function (event, ui) {
-    //
-    //         //alert(ui.item.value);
-    //         $("#search2_gene").val(ui.item.value);
-    //         return false;
-    //     },
-    //     select: function (event, ui) {
-    //         //alert(ui.item.value);
-    //         $("#search2_gene").val(ui.item.value);
-    //         term_id2 = ui.item.lable;
-    //
-    //         return false;
-    //     }
-    // });
 
     $("#search2_gene").autocomplete({
         source: function (request, response) {

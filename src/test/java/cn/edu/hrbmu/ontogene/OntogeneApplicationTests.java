@@ -24,4 +24,19 @@ public class OntogeneApplicationTests {
         System.out.println("connection = " + connection);
         connection.close();
     }
+
+    @Test
+    public void fun1() {
+        int k = 2;
+        for (int i = 0; i < k; i++) {
+            for (int j = i; j < k; j++) {
+                if (i != j) {
+
+                    System.out.println(i + "-----" + j);
+
+                }
+            }
+        }
+    }
+
 }

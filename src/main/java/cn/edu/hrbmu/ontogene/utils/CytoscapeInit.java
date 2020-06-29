@@ -24,18 +24,18 @@ public class CytoscapeInit {
         Map<String, String> map2 = new HashMap<>();
         Map<String, String> map3 = new HashMap<>();
         Map<String, String> map4 = new HashMap<>();
+
         map1.put("name", "label");
         map1.put("type", "string");
 
         map3.put("name", "nodesize");
         map3.put("type", "string");
 
+        map2.put("name", "edgecolor");
+        map2.put("type", "string");
 
         map4.put("name", "nodecolor");
         map4.put("type", "string");
-
-        map2.put("name", "edgecolor");
-        map2.put("type", "string");
 
 
         noschema.add(map1);

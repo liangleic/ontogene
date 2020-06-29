@@ -6,6 +6,7 @@ import cn.edu.hrbmu.ontogene.domain.Term;
 import cn.edu.hrbmu.ontogene.service.AnnotationService;
 import cn.edu.hrbmu.ontogene.service.RnaInteractionService;
 import cn.edu.hrbmu.ontogene.service.TermService;
+import cn.edu.hrbmu.ontogene.utils.CollectionUtils;
 import cn.edu.hrbmu.ontogene.utils.CytoscapeInit;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -203,13 +204,13 @@ public class AnnotationController {
     }
 
     @ResponseBody
-    @GetMapping("/getAnnotationLimit")
-    public String getAnnByLimit(HttpServletRequest request) {
+    @GetMapping("/getAnnByWithRandomWalk")
+    public String getAnnByWithRandomWalk(HttpServletRequest request) {
         Map<String, Map<String, List>> mapdata = CytoscapeInit.initCytoscape();
 
         String[] noid = request.getParameterValues("qc");
-        ArrayList<String> node1List1 = new ArrayList<String>();
-        ArrayList<String> node1List2 = new ArrayList<String>();
+        List<List<String>> nodeLists = new ArrayList<>();
+        List<List<Rna_Interaction>> rna_interactionLists = new ArrayList<>();
 
         Map<String, List> mapda = new HashMap<>();
         List<Map<String, String>> listnode = new ArrayList<>();
@@ -218,145 +219,138 @@ public class AnnotationController {
 
         List<Map<String, String>> listedge = new ArrayList<>();
         HashMap<String, Map<String, String>> Mapedge = new HashMap<String, Map<String, String>>();
-        Map<String, String> mapparent = new HashMap<>();
 
 
-        /************ first gene **************/
-        String pd = noid[0];
-        System.out.println("pd:" + pd);
-
+        int count = noid.length;
+        List<List<Annotation>> annotationLists = new ArrayList<>();
         Annotation annotation = new Annotation();
-        annotation.setTerm_id(pd);
-        List<Annotation> annotationList = annotationService.getAnnById(annotation);
+        for (int i = 0; i < count; i++) {
+            annotation.setTerm_id(noid[i]);
+            Map<String, String> mapparent = new HashMap<>();
+            List<String> nodeList = new ArrayList<String>();
 
-        mapparent.put("id", pd);
-        mapparent.put("label", pd);
-        mapparent.put("nodecolor", "gene");
-        mapparent.put("nodesize", "parent");
-
-        listnode.add(mapparent);
-
-        for (Annotation a : annotationList) {
-            node1List1.add(a.getRna_hgnc_id());
-        }
-        /************ first gene **************/
+            List<Annotation> annotationList = annotationService.getAnnById(annotation);
 
 
-        /************ second gene **************/
-        if (!noid[1].equals(noid[0])) {
-            pd = noid[1];
-            System.out.println("aaaaaaa:" + pd);
-            annotation.setTerm_id(pd);
-            List<Annotation> annotationList2 = annotationService.getAnnById(annotation);
+            annotationLists.add(annotationList);
+            mapparent.put("id", noid[i]);
+            mapparent.put("label", noid[i]);
+            mapparent.put("nodecolor", "gene");
+            mapparent.put("nodesize", "parent");
+            listnode.add(mapparent);
 
-            Map<String, String> mapparent2 = new HashMap<>();
-            mapparent2.put("id", pd);
-            mapparent2.put("label", pd);
-            mapparent2.put("nodecolor", "gene");
-            mapparent2.put("nodesize", "parent");
-
-            for (Annotation a : annotationList2) {
-                if (!node1List1.contains(a.getRna_hgnc_id())) {
-                    node1List2.add(a.getRna_hgnc_id());
-                } else {
-                    System.out.println("common id: " + a.getRna_hgnc_id());
-                    node1List1.remove(a.getRna_hgnc_id());
-
-                    Map<String, String> mapchild = new HashMap<>();
-                    mapchild.put("id", a.getRna_hgnc_id());
-                    mapchild.put("label", a.getRna_symbol());
-                    mapchild.put("nodecolor", "gene_pre");
-                    mapchild.put("nodesize", "child");
-
-                    listnode.add(mapchild);
-
-                    Map<String, String> mapedge = new HashMap<>();
-                    mapedge.put("id", a.getRna_hgnc_id() + pd);
-                    mapedge.put("label", a.getRna_hgnc_id() + pd);
-                    mapedge.put("target", a.getRna_hgnc_id());
-                    mapedge.put("source", pd);
-                    mapedge.put("edgecolor", a.getTerm_type());
-
-                    listedge.add(mapedge);
-
-                    Map<String, String> mapedge2 = new HashMap<>();
-                    mapedge2.put("id", a.getRna_hgnc_id() + noid[0]);
-                    mapedge2.put("label", a.getRna_hgnc_id() + noid[0]);
-                    mapedge2.put("target", a.getRna_hgnc_id());
-                    mapedge2.put("source", noid[0]);
-                    mapedge2.put("edgecolor", a.getTerm_type());
-
-                    listedge.add(mapedge2);
-                }
+            for (Annotation a : annotationList) {
+                nodeList.add(a.getRna_hgnc_id());
             }
-            listnode.add(mapparent2);
+            nodeLists.add(nodeList);
+        }
 
-            List<String> lists = new ArrayList<>();
-            lists.addAll(node1List1);
-            lists.addAll(node1List2);
-            List<Rna_Interaction> rna_interactionList = rnaInteractionService.getRnaInteraction(node1List1, node1List2);
+        List<String> listTemp = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            for (int j = i; j < count; j++) {
+                if (i != j) {
+                    listTemp.addAll(nodeLists.get(i));
+                    listTemp = (List<String>) CollectionUtils.getSame(nodeLists.get(i), nodeLists.get(j));
+                    nodeLists.get(i).removeAll(listTemp);
+                    nodeLists.get(j).removeAll(listTemp);
+                    for (int k = 0; k < listTemp.size(); k++) {
+                        for (int m = 0 ;m<annotationLists.get(j).size();m++) {
+                            Annotation a= annotationLists.get(j).get(m);
+                            if (listTemp.get(k).equals(a.getRna_hgnc_id())) {
 
+                                Map<String, String> mapchild = new HashMap<>();
+                                mapchild.put("id", a.getRna_hgnc_id());
+                                mapchild.put("label", a.getRna_symbol());
+                                mapchild.put("nodecolor", "gene_pre");
+                                mapchild.put("nodesize", "child");
 
-            if (node1List1.size() > 0 && node1List2.size() > 0) {
+                                listnode.add(mapchild);
 
-                for (Rna_Interaction rna : rna_interactionList) {
+                                Map<String, String> mapedge = new HashMap<>();
+                                mapedge.put("id", a.getRna_hgnc_id() + noid[i]);
+                                mapedge.put("label", a.getRna_hgnc_id() + noid[i]);
+                                mapedge.put("target", a.getRna_hgnc_id());
+                                mapedge.put("source", noid[i]);
+                                mapedge.put("edgecolor", a.getTerm_type());
+                                listedge.add(mapedge);
+                                Map<String, String> mapedge2 = new HashMap<>();
+                                mapedge2.put("id", a.getRna_hgnc_id() + noid[j]);
+                                mapedge2.put("label", a.getRna_hgnc_id() + noid[j]);
+                                mapedge2.put("target", a.getRna_hgnc_id());
+                                mapedge2.put("source", noid[j]);
+                                mapedge2.put("edgecolor", a.getTerm_type());
+                                listedge.add(mapedge2);
 
-                    Map<String, String> mapedge = new HashMap<>();
-                    mapedge.put("id", rna.getRna1_hgnc_id() + rna.getRna2_hgnc_id());
-                    mapedge.put("label", rna.getRna1_hgnc_id() + rna.getRna2_hgnc_id());
-                    mapedge.put("target", rna.getRna1_hgnc_id());
-                    mapedge.put("source", rna.getRna2_hgnc_id());
-                    mapedge.put("edgecolor", "inter");
-
-                    if (!mapset.contains(rna.getRna1_hgnc_id())) {
-                        Map<String, String> mapchild = new HashMap<>();
-                        mapchild.put("id", rna.getRna1_hgnc_id());
-                        mapchild.put("label", rna.getRna1_symbol());
-                        mapchild.put("nodecolor", "gene_pre");
-                        mapchild.put("nodesize", "child");
-
-                        listnode.add(mapchild);
-                        mapset.add(rna.getRna1_hgnc_id());
-                    }
-                    if (!mapset.contains(rna.getRna2_hgnc_id())) {
-                        Map<String, String> mapchild = new HashMap<>();
-                        mapchild.put("id", rna.getRna2_hgnc_id());
-                        mapchild.put("label", rna.getRna2_symbol());
-                        mapchild.put("nodecolor", "gene_pre");
-                        mapchild.put("nodesize", "child");
-
-                        listnode.add(mapchild);
-                        mapset.add(rna.getRna2_hgnc_id());
-                    }
-
-                    if (!listedge.contains(mapedge))
-                        listedge.add(mapedge);
-                    else {
-                        System.out.println(rna.getRna1_hgnc_id() + ", " + rna.getRna2_hgnc_id());
+                            }
+                        }
                     }
 
-                    Map<String, String> mapedge1 = new HashMap<>();
-                    mapedge1.put("id", rna.getRna1_hgnc_id() + noid[0]);
-                    mapedge1.put("label", rna.getRna1_hgnc_id() + noid[0]);
-                    mapedge1.put("target", rna.getRna1_hgnc_id());
-                    mapedge1.put("source", noid[0]);
-                    mapedge1.put("edgecolor", rna.getRna1_type());
 
-                    if (!listedge.contains(mapedge1))
-                        listedge.add(mapedge1);
 
-                    Map<String, String> mapedge2 = new HashMap<>();
-                    mapedge2.put("id", rna.getRna2_hgnc_id() + noid[1]);
-                    mapedge2.put("label", rna.getRna2_hgnc_id() + noid[1]);
-                    mapedge2.put("target", rna.getRna2_hgnc_id());
-                    mapedge2.put("source", noid[1]);
-                    mapedge2.put("edgecolor", rna.getRna2_type());
+                    if (nodeLists.get(i).size() > 0 && nodeLists.get(j).size() > 0) {
+                        List<Rna_Interaction> rna_interactionList = rnaInteractionService.getRnaInteraction(nodeLists.get(i), nodeLists.get(j));
 
-                    if (!listedge.contains(mapedge2))
-                        listedge.add(mapedge2);
+                        for (Rna_Interaction rna : rna_interactionList) {
+
+                            Map<String, String> mapedge = new HashMap<>();
+                            mapedge.put("id", rna.getRna1_hgnc_id() + rna.getRna2_hgnc_id());
+                            mapedge.put("label", rna.getRna1_hgnc_id() + rna.getRna2_hgnc_id());
+                            mapedge.put("target", rna.getRna1_hgnc_id());
+                            mapedge.put("source", rna.getRna2_hgnc_id());
+                            mapedge.put("edgecolor", "inter");
+
+                            if (!mapset.contains(rna.getRna1_hgnc_id())) {
+                                Map<String, String> mapchild = new HashMap<>();
+                                mapchild.put("id", rna.getRna1_hgnc_id());
+                                mapchild.put("label", rna.getRna1_symbol());
+                                mapchild.put("nodecolor", "gene_pre");
+                                mapchild.put("nodesize", "child");
+
+                                listnode.add(mapchild);
+                                mapset.add(rna.getRna1_hgnc_id());
+                            }
+                            if (!mapset.contains(rna.getRna2_hgnc_id())) {
+                                Map<String, String> mapchild = new HashMap<>();
+                                mapchild.put("id", rna.getRna2_hgnc_id());
+                                mapchild.put("label", rna.getRna2_symbol());
+                                mapchild.put("nodecolor", "gene_pre");
+                                mapchild.put("nodesize", "child");
+
+                                listnode.add(mapchild);
+                                mapset.add(rna.getRna2_hgnc_id());
+                            }
+
+                            if (!listedge.contains(mapedge))
+                                listedge.add(mapedge);
+                            else {
+                                System.out.println(rna.getRna1_hgnc_id() + ", " + rna.getRna2_hgnc_id());
+                            }
+
+                            Map<String, String> mapedge1 = new HashMap<>();
+                            mapedge1.put("id", rna.getRna1_hgnc_id() + noid[i]);
+                            mapedge1.put("label", rna.getRna1_hgnc_id() + noid[i]);
+                            mapedge1.put("target", rna.getRna1_hgnc_id());
+                            mapedge1.put("source", noid[i]);
+                            mapedge1.put("edgecolor", rna.getRna1_type());
+
+                            if (!listedge.contains(mapedge1))
+                                listedge.add(mapedge1);
+
+                            Map<String, String> mapedge2 = new HashMap<>();
+                            mapedge2.put("id", rna.getRna2_hgnc_id() + noid[j]);
+                            mapedge2.put("label", rna.getRna2_hgnc_id() + noid[j]);
+                            mapedge2.put("target", rna.getRna2_hgnc_id());
+                            mapedge2.put("source", noid[j]);
+                            mapedge2.put("edgecolor", rna.getRna2_type());
+
+                            if (!listedge.contains(mapedge2))
+                                listedge.add(mapedge2);
+                        }
+                    }
                 }
             }
         }
+
         /************ second gene **************/
         mapda.put("nodes", listnode);
         mapda.put("edges", listedge);
@@ -368,4 +362,172 @@ public class AnnotationController {
 
         return (js.toString());
     }
+
+
+    @ResponseBody
+    @GetMapping("/getAnnotationLimit")
+    public String getAnnByLimit(HttpServletRequest request) {
+        Map<String, Map<String, List>> mapdata = CytoscapeInit.initCytoscape();
+
+        String[] noid = request.getParameterValues("qc");
+        List<List<String>> nodeLists = new ArrayList<>();
+        List<List<Rna_Interaction>> rna_interactionLists = new ArrayList<>();
+
+        Map<String, List> mapda = new HashMap<>();
+        List<Map<String, String>> listnode = new ArrayList<>();
+        HashMap<String, Map<String, String>> Mapnode = new HashMap<>();
+        HashSet<String> mapset = new HashSet<String>();
+
+        List<Map<String, String>> listedge = new ArrayList<>();
+        HashMap<String, Map<String, String>> Mapedge = new HashMap<String, Map<String, String>>();
+
+
+        int count = noid.length;
+        List<List<Annotation>> annotationLists = new ArrayList<>();
+        Annotation annotation = new Annotation();
+        for (int i = 0; i < count; i++) {
+            annotation.setTerm_id(noid[i]);
+            Map<String, String> mapparent = new HashMap<>();
+            List<String> nodeList = new ArrayList<String>();
+
+            List<Annotation> annotationList = annotationService.getAnnById(annotation);
+
+
+            annotationLists.add(annotationList);
+            mapparent.put("id", noid[i]);
+            mapparent.put("label", noid[i]);
+            mapparent.put("nodecolor", "gene");
+            mapparent.put("nodesize", "parent");
+            listnode.add(mapparent);
+
+
+            for (Annotation a : annotationList) {
+                nodeList.add(a.getRna_hgnc_id());
+            }
+
+            nodeLists.add(nodeList);
+
+        }
+
+        List<String> listTemp = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            for (int j = i; j < count; j++) {
+                if (i != j) {
+                    listTemp.addAll(nodeLists.get(i));
+                    listTemp = (List<String>) CollectionUtils.getSame(nodeLists.get(i), nodeLists.get(j));
+
+                    nodeLists.get(i).removeAll(listTemp);
+                    nodeLists.get(j).removeAll(listTemp);
+
+                    for (int k = 0; k < listTemp.size(); k++) {
+                        for (int m = 0 ;m<annotationLists.get(j).size();m++) {
+                            Annotation a= annotationLists.get(j).get(m);
+                            if (listTemp.get(k).equals(a.getRna_hgnc_id())) {
+
+                                Map<String, String> mapchild = new HashMap<>();
+                                mapchild.put("id", a.getRna_hgnc_id());
+                                mapchild.put("label", a.getRna_symbol());
+                                mapchild.put("nodecolor", "gene_pre");
+                                mapchild.put("nodesize", "child");
+
+                                listnode.add(mapchild);
+
+                                Map<String, String> mapedge = new HashMap<>();
+                                mapedge.put("id", a.getRna_hgnc_id() + noid[i]);
+                                mapedge.put("label", a.getRna_hgnc_id() + noid[i]);
+                                mapedge.put("target", a.getRna_hgnc_id());
+                                mapedge.put("source", noid[i]);
+                                mapedge.put("edgecolor", a.getTerm_type());
+                                listedge.add(mapedge);
+                                Map<String, String> mapedge2 = new HashMap<>();
+                                mapedge2.put("id", a.getRna_hgnc_id() + noid[j]);
+                                mapedge2.put("label", a.getRna_hgnc_id() + noid[j]);
+                                mapedge2.put("target", a.getRna_hgnc_id());
+                                mapedge2.put("source", noid[j]);
+                                mapedge2.put("edgecolor", a.getTerm_type());
+                                listedge.add(mapedge2);
+
+                            }
+                        }
+                    }
+
+
+
+                    if (nodeLists.get(i).size() > 0 && nodeLists.get(j).size() > 0) {
+                        List<Rna_Interaction> rna_interactionList = rnaInteractionService.getRnaInteraction(nodeLists.get(i), nodeLists.get(j));
+
+                        for (Rna_Interaction rna : rna_interactionList) {
+
+                            Map<String, String> mapedge = new HashMap<>();
+                            mapedge.put("id", rna.getRna1_hgnc_id() + rna.getRna2_hgnc_id());
+                            mapedge.put("label", rna.getRna1_hgnc_id() + rna.getRna2_hgnc_id());
+                            mapedge.put("target", rna.getRna1_hgnc_id());
+                            mapedge.put("source", rna.getRna2_hgnc_id());
+                            mapedge.put("edgecolor", "inter");
+
+                            if (!mapset.contains(rna.getRna1_hgnc_id())) {
+                                Map<String, String> mapchild = new HashMap<>();
+                                mapchild.put("id", rna.getRna1_hgnc_id());
+                                mapchild.put("label", rna.getRna1_symbol());
+                                mapchild.put("nodecolor", "gene_pre");
+                                mapchild.put("nodesize", "child");
+
+                                listnode.add(mapchild);
+                                mapset.add(rna.getRna1_hgnc_id());
+                            }
+                            if (!mapset.contains(rna.getRna2_hgnc_id())) {
+                                Map<String, String> mapchild = new HashMap<>();
+                                mapchild.put("id", rna.getRna2_hgnc_id());
+                                mapchild.put("label", rna.getRna2_symbol());
+                                mapchild.put("nodecolor", "gene_pre");
+                                mapchild.put("nodesize", "child");
+
+                                listnode.add(mapchild);
+                                mapset.add(rna.getRna2_hgnc_id());
+                            }
+
+                            if (!listedge.contains(mapedge))
+                                listedge.add(mapedge);
+                            else {
+                                System.out.println(rna.getRna1_hgnc_id() + ", " + rna.getRna2_hgnc_id());
+                            }
+
+                            Map<String, String> mapedge1 = new HashMap<>();
+                            mapedge1.put("id", rna.getRna1_hgnc_id() + noid[i]);
+                            mapedge1.put("label", rna.getRna1_hgnc_id() + noid[i]);
+                            mapedge1.put("target", rna.getRna1_hgnc_id());
+                            mapedge1.put("source", noid[i]);
+                            mapedge1.put("edgecolor", rna.getRna1_type());
+
+                            if (!listedge.contains(mapedge1))
+                                listedge.add(mapedge1);
+
+                            Map<String, String> mapedge2 = new HashMap<>();
+                            mapedge2.put("id", rna.getRna2_hgnc_id() + noid[j]);
+                            mapedge2.put("label", rna.getRna2_hgnc_id() + noid[j]);
+                            mapedge2.put("target", rna.getRna2_hgnc_id());
+                            mapedge2.put("source", noid[j]);
+                            mapedge2.put("edgecolor", rna.getRna2_type());
+
+                            if (!listedge.contains(mapedge2))
+                                listedge.add(mapedge2);
+                        }
+                    }
+                }
+            }
+        }
+
+        /************ second gene **************/
+        mapda.put("nodes", listnode);
+        mapda.put("edges", listedge);
+        mapdata.put("data", mapda);
+        JSONObject js = JSONObject.fromObject(mapdata);
+
+        System.out.println("js.toString(): " + js.toString());
+        // return "{\"dataSchema\":{\"nodes\":[{\"name\":\"label\",\"type\":\"string\"},{\"name\":\"nodecolor\",\"type\":\"string\"},{\"name\":\"nodesize\",\"type\":\"string\"}],\"edges\":[{\"name\":\"label\",\"type\":\"string\"},{\"name\":\"edgecolor\",\"type\":\"string\"}]},\"data\":{\"nodes\":[{\"nodecolor\":\"gene\",\"id\":\"GO:1903001\",\"label\":\"GO:1903001\",\"nodesize\":\"parent\"},{\"nodecolor\":\"gene\",\"id\":\"GO:1903002\",\"label\":\"GO:1903002\",\"nodesize\":\"parent\"},{\"nodecolor\":\"gene\",\"id\":\"GO:1903003\",\"label\":\"GO:1903003\",\"nodesize\":\"parent\"},{\"nodecolor\":\"gene_pre\",\"id\":\"407018\",\"label\":\"MIR27A\",\"nodesize\":\"child\"},{\"nodecolor\":\"gene_pre\",\"id\":\"89780\",\"label\":\"WNT3A\",\"nodesize\":\"child\"}],\"edges\":[{\"edgecolor\":\"do\",\"id\":\"3767DOID:9352\",\"label\":\"3767DOID:9352\",\"source\":\"GO:1903003\",\"target\":\"407018\"},{\"edgecolor\":\"do\",\"id\":\"3767DOID:9352\",\"label\":\"3767DOID:9342\",\"source\":\"GO:1903001\",\"target\":\"GO:1903002\"},{\"edgecolor\":\"do\",\"id\":\"3767DOID:9352\",\"label\":\"3767DOID:9351\",\"source\":\"GO:1903002\",\"target\":\"GO:1903003\"},{\"edgecolor\":\"do\",\"id\":\"3767DOID:9352\",\"label\":\"3767DOID:9352\",\"source\":\"GO:1903001\",\"target\":\"GO:1903003\"}]}}";
+
+        return (js.toString());
+    }
+
+
 }
